@@ -5,13 +5,20 @@ OBJLIBP=power.o
 OBJLIBM=basicMath.o
 FLAG= -Wall -g
 
-all: mLib.so mLib.a progs progd
 
-progs: $(OBJMAIN) mLib.a
-	$(CC) $(FLAG) -o progs $(OBJMAIN) mLib.a
+mymaths: $(OBJLIBM) $(OBJLIBP) 
+	$(AR) -rcs libmyMath.a $(OBJLIBM) $(OBJLIBP)
 	
-progd: $(OBJMAIN)	
-	$(CC) $(FLAG) -o progd $(OBJMAIN) ./mLib.so
+mymathd: $(OBJLIBM) $(OBJLIBP) 
+	$(CC) -shared -o libmyMath.so $(OBJLIBM) $(OBJLIBP) 
+	
+all: mLib.so mLib.a mains maind
+
+mains: $(OBJMAIN) mLib.a
+	$(CC) $(FLAG) -o mains $(OBJMAIN) mLib.a
+	
+maind: $(OBJMAIN)	
+	$(CC) $(FLAG) -o maind $(OBJMAIN) ./mLib.so
 
 
 
@@ -38,5 +45,5 @@ main.o: main.c myMath.h
 .PHONY: clean all
 
 clean:
-	rm -f *.a *.so *.o progs progd
+	rm -f *.a *.so *.o mains maind
 
